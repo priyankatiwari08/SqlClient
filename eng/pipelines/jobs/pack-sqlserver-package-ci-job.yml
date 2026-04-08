@@ -1,0 +1,87 @@
+################################################################################
+# Licensed to the .NET Foundation under one or more agreements.  The .NET
+# Foundation licenses this file to you under the MIT license.  See the LICENSE
+# file in the project root for more information.
+################################################################################
+
+# This job builds and packs the Microsoft.SqlServer.Server package via build2.proj
+# and publishes the resulting NuGet packages as a named pipeline artifact.
+#
+# This template defines a job named 'pack_sqlserver_package_job' that can be
+# depended on by downstream jobs.
+
+parameters:
+
+  # The type of build to produce (Release or Debug)
+  - name: buildConfiguration
+    type: string
+    values:
+    - Release
+    - Debug
+
+  # True to emit debug information and steps.
+  - name: debug
+    type: boolean
+    default: false
+
+  # The name of the pipeline artifacts to publish.
+  - name: sqlServerArtifactsName
+    type: string
+    default: SqlServer.Artifacts
+
+  # The version to apply to the SqlServer NuGet package and its assemblies.
+  - name: sqlServerPackageVersion
+    type: string
+
+jobs:
+
+  - job: pack_sqlserver_package_job
+    displayName: Pack SqlServer Package
+
+    pool:
+      name: Azure Pipelines
+      vmImage: windows-latest
+
+    variables:
+      - template: /eng/pipelines/libraries/ci-build-variables.yml@self
+
+      - name: REPO_ROOT
+        value: $(Build.SourcesDirectory)
+
+      - name: BUILD_OUTPUT
+        value: $(REPO_ROOT)/artifacts
+
+      - name: PACK_OUTPUT
+        value: $(packagePath)
+
+    steps:
+
+      # Emit environment variables if debug is enabled.
+      - ${{ if eq(parameters.debug, true) }}:
+        - pwsh: 'Get-ChildItem Env: | Sort-Object Name'
+          displayName: '[Debug] Print Environment Variables'
+
+      # Install the .NET SDK.
+      - template: /eng/pipelines/steps/install-dotnet.yml@self
+        parameters:
+          debug: ${{ parameters.debug }}
+
+      - template: /eng/pipelines/common/steps/build-build2-step.yml@self
+        parameters:
+          buildConfiguration: ${{ parameters.buildConfiguration }}
+          packageShortName: SqlServer
+          packageVersion: ${{ parameters.sqlServerPackageVersion }}
+
+      - template: /eng/pipelines/common/steps/pack-build2-step.yml@self
+        parameters:
+          buildConfiguration: ${{ parameters.buildConfiguration }}
+          packageFullName: Microsoft.SqlServer.Server
+          packageShortName: SqlServer
+          packageVersion: ${{ parameters.sqlServerPackageVersion }}
+
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Pipeline Artifact
+        inputs:
+          targetPath: $(PACK_OUTPUT)
+          artifactName: ${{ parameters.sqlServerArtifactsName }}
+          publishLocation: pipeline
