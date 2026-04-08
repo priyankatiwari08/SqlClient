@@ -28,7 +28,7 @@ steps:
     inputs:
       msBuildArchitecture: x64
       msBuildCommandLine: >-
-        msbuild
+        dotnet build
         $(REPO_ROOT)/build2.proj
         -t:BuildMds
         -p:Configuration=Release

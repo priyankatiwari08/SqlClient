@@ -10,12 +10,12 @@
 # NuGet packaging is done separately via pack-csproj-step.yml after DLL signing.
 
 parameters:
-  # The MSBuild build target in build.proj (e.g. BuildLogging, BuildAbstractions,
+  # The build target in build.proj (e.g. BuildLogging, BuildAbstractions,
   # BuildAzure).
   - name: buildTarget
     type: string
 
-  # Additional MSBuild arguments for version properties, e.g.
+  # Additional arguments for version properties, e.g.
   # -p:LoggingPackageVersion=1.0.0 -p:LoggingAssemblyFileVersion=1.0.123
   - name: versionProperties
     type: string
@@ -28,13 +28,14 @@ steps:
       secureFile: netfxKeypair.snk
     name: keyFile
 
-  - task: MSBuild@1
+  - task: DotNetCoreCLI@2
     displayName: 'Build.proj - ${{ parameters.buildTarget }}'
     inputs:
-      solution: '$(REPO_ROOT)/build.proj'
-      configuration: 'Release'
-      msbuildArguments: >-
+      command: build
+      projects: '$(REPO_ROOT)/build.proj'
+      arguments: >-
         -t:${{ parameters.buildTarget }}
+        -p:Configuration=Release
         -p:ReferenceType=Package
         -p:SigningKeyPath=$(keyFile.secureFilePath)
         ${{ parameters.versionProperties }}

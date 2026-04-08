@@ -48,7 +48,7 @@ Key parameters:
 - `runAlwaysEncryptedTests` — include AE test set; default `true`
 - `enableStressTests` — enable stress test stage; default `false`
 - `debug` — enable debug output; default `false`
-- `dotnetVerbosity` — MSBuild verbosity; default `normal`
+- `dotnetVerbosity` — build verbosity; default `normal`
 
 ## Build Stage Order
 

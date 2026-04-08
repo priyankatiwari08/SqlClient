@@ -77,47 +77,47 @@ steps:
 
 - ${{if eq(parameters.operatingSystem, 'Windows')}}:
   - ${{if eq(parameters.referenceType, 'Project')}}:
-    - task: MSBuild@1
+    - task: DotNetCoreCLI@2
       displayName: 'Run Unit Tests ${{parameters.msbuildArchitecture }}'
       condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
       inputs:
-        solution: build2.proj
-        msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-        platform: '${{parameters.platform }}'
-        configuration: '${{parameters.buildConfiguration }}'
+        command: build
+        projects: build2.proj
         ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-          msbuildArguments: >-
+          arguments: >-
             -t:TestMdsUnit
+            -p:Configuration=${{parameters.buildConfiguration }}
             -p:TestFramework=${{ parameters.targetFramework }}
             -p:ReferenceType=${{ parameters.referenceType }}
             -p:TestResultsFolderPath=TestResults
         ${{ else }}: # x86
-          msbuildArguments: >-
+          arguments: >-
             -t:TestMdsUnit
+            -p:Configuration=${{parameters.buildConfiguration }}
             -p:TestFramework=${{ parameters.targetFramework }}
             -p:ReferenceType=${{ parameters.referenceType }}
             -p:DotnetPath=${{ parameters.dotnetx86RootPath }}
             -p:TestResultsFolderPath=TestResults
 
-    - task: MSBuild@1
+    - task: DotNetCoreCLI@2
       displayName: 'Run Flaky Unit Tests ${{parameters.msbuildArchitecture }}'
       condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
       inputs:
-        solution: build2.proj
-        msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-        platform: '${{parameters.platform }}'
-        configuration: '${{parameters.buildConfiguration }}'
+        command: build
+        projects: build2.proj
         ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-          msbuildArguments: >-
+          arguments: >-
             -t:TestMdsUnit
+            -p:Configuration=${{parameters.buildConfiguration }}
             -p:TestFramework=${{ parameters.targetFramework }}
             -p:ReferenceType=${{ parameters.referenceType }}
             -p:TestFilters="category=flaky"
             -p:TestResultsFolderPath=TestResults
             -p:TestCodeCoverage=false
         ${{ else }}: # x86
-          msbuildArguments: >-
+          arguments: >-
             -t:TestMdsUnit
+            -p:Configuration=${{parameters.buildConfiguration }}
             -p:TestFramework=${{ parameters.targetFramework }}
             -p:ReferenceType=${{ parameters.referenceType }}
             -p:DotnetPath=${{ parameters.dotnetx86RootPath }}
@@ -126,17 +126,16 @@ steps:
             -p:TestCodeCoverage=false
       continueOnError: true
 
-  - task: MSBuild@1
+  - task: DotNetCoreCLI@2
     displayName: 'Run Functional Tests ${{parameters.msbuildArchitecture }}'
     condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      solution: build2.proj
-      msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-      platform: '${{parameters.platform }}'
-      configuration: '${{parameters.buildConfiguration }}'
+      command: build
+      projects: build2.proj
       ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsFunctional
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:PackageVersionAbstractions=${{ parameters.abstractionsPackageVersion }}
@@ -144,8 +143,9 @@ steps:
           -p:PackageVersionMds=${{ parameters.mdsPackageVersion }}
           -p:TestResultsFolderPath=TestResults
       ${{ else }}: # x86
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsFunctional
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:PackageVersionAbstractions=${{ parameters.abstractionsPackageVersion }}
@@ -154,17 +154,16 @@ steps:
           -p:DotnetPath=${{ parameters.dotnetx86RootPath }}
           -p:TestResultsFolderPath=TestResults
 
-  - task: MSBuild@1
-    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
+  - task: DotNetCoreCLI@2
     displayName: 'Run Flaky Functional Tests ${{parameters.msbuildArchitecture }}'
+    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      solution: build2.proj
-      msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-      platform: '${{parameters.platform }}'
-      configuration: '${{parameters.buildConfiguration }}'
+      command: build
+      projects: build2.proj
       ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsFunctional
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:PackageVersionAbstractions=${{ parameters.abstractionsPackageVersion }}
@@ -174,8 +173,9 @@ steps:
           -p:TestResultsFolderPath=TestResults
           -p:TestCodeCoverage=false
       ${{ else }}: # x86
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsFunctional
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:PackageVersionAbstractions=${{ parameters.abstractionsPackageVersion }}
@@ -187,17 +187,16 @@ steps:
           -p:TestCodeCoverage=false
     continueOnError: true
 
-  - task: MSBuild@1
-    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
+  - task: DotNetCoreCLI@2
     displayName: 'Run Manual Tests ${{parameters.msbuildArchitecture }}'
+    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      solution: build2.proj
-      msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-      platform: '${{parameters.platform }}'
-      configuration: '${{parameters.buildConfiguration }}'
+      command: build
+      projects: build2.proj
       ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsManual
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:TestSet=${{ parameters.testSet }}
           -p:ReferenceType=${{ parameters.referenceType }}
@@ -206,8 +205,9 @@ steps:
           -p:PackageVersionMds=${{ parameters.mdsPackageVersion }}
           -p:TestResultsFolderPath=TestResults
       ${{ else }}: # x86
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsManual
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:TestSet=${{ parameters.testSet }}
           -p:ReferenceType=${{ parameters.referenceType }}
@@ -218,17 +218,16 @@ steps:
           -p:TestResultsFolderPath=TestResults
     retryCountOnTaskFailure: ${{parameters.retryCountOnManualTests }}
 
-  - task: MSBuild@1
-    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
+  - task: DotNetCoreCLI@2
     displayName: 'Run Flaky Manual Tests ${{parameters.msbuildArchitecture }}'
+    condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      solution: build2.proj
-      msbuildArchitecture: ${{parameters.msbuildArchitecture }}
-      platform: '${{parameters.platform }}'
-      configuration: '${{parameters.buildConfiguration }}'
+      command: build
+      projects: build2.proj
       ${{ if eq(parameters.msbuildArchitecture, 'x64') }}:
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsManual
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:TestSet=${{ parameters.testSet }}
           -p:ReferenceType=${{ parameters.referenceType }}
@@ -239,8 +238,9 @@ steps:
           -p:TestResultsFolderPath=TestResults
           -p:TestCodeCoverage=false
       ${{ else }}: # x86
-        msbuildArguments: >-
+        arguments: >-
           -t:TestMdsManual
+          -p:Configuration=${{parameters.buildConfiguration }}
           -p:TestFramework=${{ parameters.targetFramework }}
           -p:TestSet=${{ parameters.testSet }}
           -p:ReferenceType=${{ parameters.referenceType }}
@@ -259,9 +259,8 @@ steps:
       displayName: 'Run Unit Tests'
       condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
       inputs:
-        command: custom
+        command: build
         projects: build2.proj
-        custom: msbuild
         arguments: >-
           -t:TestMdsUnit
           -p:TestFramework=${{ parameters.targetFramework }}
@@ -271,16 +270,13 @@ steps:
           -p:PackageVersionMds=${{ parameters.mdsPackageVersion }}
           -p:Configuration=${{ parameters.buildConfiguration }}
           -p:TestResultsFolderPath=TestResults
-        verbosityRestore: Detailed
-        verbosityPack: Detailed
 
     - task: DotNetCoreCLI@2
       displayName: 'Run Flaky Unit Tests'
       condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
       inputs:
-        command: custom
+        command: build
         projects: build2.proj
-        custom: msbuild
         arguments: >-
           -t:TestMdsUnit
           -p:TestFramework=${{ parameters.targetFramework }}
@@ -292,17 +288,14 @@ steps:
           -p:TestFilters="category=flaky"
           -p:TestResultsFolderPath=TestResults
           -p:TestCodeCoverage=false
-        verbosityRestore: Detailed
-        verbosityPack: Detailed
       continueOnError: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Functional Tests'
     condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      command: custom
+      command: build
       projects: build2.proj
-      custom: msbuild
       arguments: >-
         -t:TestMdsFunctional
         -p:TestFramework=${{ parameters.targetFramework }}
@@ -312,16 +305,13 @@ steps:
         -p:PackageVersionMds=${{ parameters.mdsPackageVersion }}
         -p:Configuration=${{ parameters.buildConfiguration }}
         -p:TestResultsFolderPath=TestResults
-      verbosityRestore: Detailed
-      verbosityPack: Detailed
 
   - task: DotNetCoreCLI@2
     condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     displayName: 'Run Flaky Functional Tests'
     inputs:
-      command: custom
+      command: build
       projects: build2.proj
-      custom: msbuild
       arguments: >-
         -t:TestMdsFunctional
         -p:TestFramework=${{ parameters.targetFramework }}
@@ -333,17 +323,14 @@ steps:
         -p:TestFilters="category=flaky"
         -p:TestResultsFolderPath=TestResults
         -p:TestCodeCoverage=false
-      verbosityRestore: Detailed
-      verbosityPack: Detailed
     continueOnError: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Manual Tests'
     condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      command: custom
+      command: build
       projects: build2.proj
-      custom: msbuild
       arguments: >-
         -t:TestMdsManual
         -p:TestFramework=${{ parameters.targetFramework }}
@@ -354,17 +341,14 @@ steps:
         -p:PackageVersionMds=${{ parameters.mdsPackageVersion }}
         -p:Configuration=${{ parameters.buildConfiguration }}
         -p:TestResultsFolderPath=TestResults
-      verbosityRestore: Detailed
-      verbosityPack: Detailed
     retryCountOnTaskFailure: ${{parameters.retryCountOnManualTests }}
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Flaky Manual Tests'
     condition: and(eq(variables['setupSucceeded'], 'true'), succeededOrFailed())
     inputs:
-      command: custom
+      command: build
       projects: build2.proj
-      custom: msbuild
       arguments: >-
         -t:TestMdsManual
         -p:TestFramework=${{ parameters.targetFramework }}
@@ -377,6 +361,4 @@ steps:
         -p:TestFilters="category=flaky"
         -p:TestResultsFolderPath=TestResults
         -p:TestCodeCoverage=false
-      verbosityRestore: Detailed
-      verbosityPack: Detailed
     continueOnError: true

@@ -16,13 +16,14 @@ parameters:
     type: string
 
 steps:
-  - task: MSBuild@1
+  - task: DotNetCoreCLI@2
     displayName: 'Build2.proj - Pack SqlClient'
     inputs:
-      solution: '$(REPO_ROOT)/build2.proj'
-      configuration: 'Release'
-      msbuildArguments: >-
+      command: build
+      projects: '$(REPO_ROOT)/build2.proj'
+      arguments: >-
         -t:PackMds
+        -p:Configuration=Release
         -p:BuildNumber="$(Build.BuildNumber)"
         -p:PackBuild=false
         -p:PackageVersionAbstractions="${{ parameters.abstractionsPackageVersion }}"

@@ -34,7 +34,7 @@ steps:
       msBuildArchitecture: x64
       setupCommandLinePicker: vs2022
       msBuildCommandLine: >-
-        msbuild
+        dotnet build
         $(REPO_ROOT)\build.proj
         -t:${{ parameters.buildTarget }}
         ${{ parameters.msBuildArguments }}

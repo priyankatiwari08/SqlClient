@@ -21,7 +21,7 @@ The project includes:
   - **Manual Tests**: Located in `tests/ManualTests/` directory, which includes tests that require a SQL Server instance to run.
 - **Documentation**: Found in the `doc/` directory, including API documentation, usage examples.
 - **Policies**: Contribution guidelines, coding standards, and review policies in the `policy/` directory.
-- **Building**: The project uses MSBuild for building and testing, with configurations and targets defined in the `build.proj` file, whereas instructions are provided in the `BUILDGUIDE.md` file.
+- **Building**: The project uses `dotnet build` for building and testing, with configurations and targets defined in the `build.proj` file, whereas instructions are provided in the `BUILDGUIDE.md` file.
 - **CI/CD**: ADO Pipelines for CI/CD and Pull request validation are defined in the `eng/` directory, ensuring code quality and automated testing.
 
 ## 📦 Products

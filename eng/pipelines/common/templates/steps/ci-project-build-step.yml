@@ -75,16 +75,15 @@ parameters:
 steps:
   # Build MDS
   - ${{ if or(eq(parameters.build, 'MDS'), eq(parameters.build, 'all'), eq(parameters.build, 'allNoDocs')) }}:
-    - task: MSBuild@1
+    - task: DotNetCoreCLI@2
       displayName: 'Build Driver'
       condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
       inputs:
-        solution: build2.proj
-        msbuildArchitecture: x64
-        platform: '${{ parameters.platform }}'
-        configuration: '${{ parameters.buildConfiguration }}'
-        msbuildArguments:
+        command: build
+        projects: build2.proj
+        arguments: >-
           -t:BuildMds
+          -p:Configuration=${{ parameters.buildConfiguration }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:BuildNumber=${{ parameters.assemblyBuildNumber }}
           -p:PackageVersionAbstractions=${{ parameters.abstractionsPackageVersion }}
@@ -93,16 +92,15 @@ steps:
 
   # Build AKV Provider
   - ${{ if or(eq(parameters.build, 'AkvProvider'), eq(parameters.build, 'all'), eq(parameters.build, 'allNoDocs')) }}:
-    - task: MSBuild@1
+    - task: DotNetCoreCLI@2
       displayName: 'Build AKV Provider'
       condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
       inputs:
-        solution: build.proj
-        msbuildArchitecture: x64
-        platform: '${{ parameters.platform }}'
-        configuration: '${{ parameters.buildConfiguration }}'
-        msbuildArguments: >-
+        command: build
+        projects: build.proj
+        arguments: >-
           -t:BuildAkvProvider
+          -p:Platform=${{ parameters.platform }}
           -p:ReferenceType=${{ parameters.referenceType }}
           -p:TestEnabled=true
           -p:GenerateNuget=false
@@ -113,6 +111,3 @@ steps:
           -p:AbstractionsPackageVersion=${{ parameters.abstractionsPackageVersion }}
           -p:LoggingPackageVersion=${{ parameters.loggingPackageVersion }}
           -p:MdsPackageVersion=${{ parameters.mdsPackageVersion }}
-        verbosityRestore: Detailed
-        verbosityPack: Detailed
-

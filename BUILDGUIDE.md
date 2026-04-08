@@ -6,20 +6,15 @@ This document provides all the necessary details to build the driver and run tes
 
 ### .NET SDK
 
-The projects in this repo require the .NET 10.0 SDK to build.  Please ensure you
-have the latest version of that SDK installed.
+The projects in this repo require the .NET 10.0 SDK to build and test.  Please ensure you have the
+latest version of that SDK installed.
 
-Tests and tools may require different .NET Runtimes that may be installed
-independently.  For example, tests targeting .NET 8.0 will need that runtime
-installed.
+Tests and tools may require different .NET Runtimes that may be installed independently.  For
+example, tests targeting .NET 8.0 will need that runtime installed.
 
-### Visual Studio
+### PowerShell
 
-This project should be built with Visual Studio 2019+ for the best compatibility. The required set of components are provided in the below file:
-
-- **Visual Studio 2019** with imported components: [VS19Components](/tools/vsconfig/VS19Components.vsconfig)
-
-- **Powershell**: To build SqlClient on Linux, powershell is needed as well. Follow the distro specific instructions at [Install Powershell on Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4)
+To build SqlClient on Linux, PowerShell is needed. Follow the distro specific instructions at [Install PowerShell on Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4)
 
 Once the environment is setup properly, execute the desired set of commands below from the _root_ folder to perform the respective operations:
 
@@ -57,7 +52,7 @@ Manual Tests require the below setup to run:
   |IsManagedInstance | (Optional) When set to `true` **TVP** related tests will use non-Azure bsl files to compare test results. This is needed when testing against Azure Managed Instances; otherwise TVP Tests will fail on TestSet 3. The default value is `false`. |
   |PowerShellPath | The full path to PowerShell.exe. This is not required if the path is present in the PATH environment variable. | `D:\\escaped\\absolute\\path\\to\\PowerShell.exe` |
 
-## MSBuild Reference
+## Build Reference
 
 ### Targets
 
@@ -87,7 +82,7 @@ The following build targets are defined in `build.proj`:
 
 ### Parameters
 
-The following parameters may be defined as MSBuild properties to configure the
+The following parameters may be defined as properties to configure the
 build:
 
 |Name|Supported Values|Default|Description|
@@ -100,43 +95,43 @@ build:
 |`TF`|`net8.0`, `net462`, `net47`, `net471`, `net472`, `net48`, `net481`|`net9.0` in netcore, `net462` in netfx|Sets the target framework when building or running tests. Not applicable when building the drivers.|
 |`ResultsDirectory`|An absolute file path|./TestResults relative to current directory|Specifies where to write test results.|
 
-## Example Commands to Run Tests Using MSBuild (Recommended)
+## Example Commands to Run Tests Using `dotnet build` (Recommended)
 
 Using the default configuration and running all tests:
 
 ```bash
-msbuild -t:RunTests
+dotnet build build.proj -t:RunTests
 ```
 
 Using the Release configuration:
 
 ```bash
-msbuild -t:RunTests -p:Configuration=Release
+dotnet build build.proj -t:RunTests -p:Configuration=Release
 ```
 
 Running only the unit tests:
 
 ```bash
-msbuild -t:RunUnitTests
+dotnet build build.proj -t:RunUnitTests
 ```
 
 Using a specific .NET runtime to run tests:
 
 ```bash
-msbuild -t:RunTests -p:DotnetPath=C:\net8-win-x86\
+dotnet build build.proj -t:RunTests -p:DotnetPath=C:\net8-win-x86\
 ```
 
 To run tests against a specific version of .NET/.NET Framework, set the `-p:TF` parameter.
 
 ```bash
-msbuild -t:RunTests -p:TF=net8.0
-msbuild -t:RunTests -p:TF=net462
+dotnet build build.proj -t:RunTests -p:TF=net8.0
+dotnet build build.proj -t:RunTests -p:TF=net462
 ```
 
-## Example Commands to Run Tests using `dotnet`
+## Example Commands to Run Tests using `dotnet test`
 
-Under the hood, the MSBuild commands to run tests use `dotnet` commands. But, if you wish to run
-them without the overhead of wrapping/unwrapping in MSBuild, you can run them directly.
+Under the hood, the build targets to run tests use `dotnet test` commands. But, if you wish to run
+them without the overhead of the build.proj orchestration, you can run them directly.
 
 To change the processor architecture that runs the test (where possible, ie, x86 on x64), use the
 appropriate `dotnet` executable.
@@ -170,6 +165,7 @@ dotnet test "src/Microsoft.Data.SqlClient/tests/ManualTests/Microsoft.Data.SqlCl
 ```
 
 ### Run Unit Tests
+
 ```bash
 dotnet test "src/Microsoft.Data.SqlClient/tests/UnitTests/Microsoft.Data.SqlClient.UnitTests.csproj" \
   -p:Configuration=Release \
@@ -218,7 +214,6 @@ Provide property to `dotnet test` commands for testing desired reference type.
 ```bash
 dotnet test -p:ReferenceType=Project ...
 ```
-
 
 ## Using Managed SNI on Windows
 

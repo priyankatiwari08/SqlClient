@@ -23,13 +23,14 @@ steps:
       secureFile: 'netfxKeypair.snk'
     name: keyFile
 
-  - task: MSBuild@1
+  - task: DotNetCoreCLI@2
     displayName: 'Build2.proj - Build SqlClient'
     inputs:
-      solution: '$(REPO_ROOT)/build2.proj'
-      configuration: 'Release'
-      msbuildArguments: >-
+      command: build
+      projects: '$(REPO_ROOT)/build2.proj'
+      arguments: >-
         -t:BuildMds
+        -p:Configuration=Release
         -p:BuildNumber="$(Build.BuildNumber)"
         -p:PackageVersionAbstractions="${{ parameters.abstractionsPackageVersion }}"
         -p:PackageVersionLogging="${{ parameters.loggingPackageVersion }}"
