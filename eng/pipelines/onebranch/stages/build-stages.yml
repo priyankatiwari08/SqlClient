@@ -166,8 +166,13 @@ stages:
 
 
       - ${{ if eq(parameters.buildSqlServerServer, true) }}:
-        - template: /eng/pipelines/onebranch/jobs/build-signed-csproj-package-job.yml@self
+        # Build Microsoft.SqlServer.Server
+        - template: /eng/pipelines/onebranch/jobs/build-build2-package-job.yml@self
           parameters:
+            apiScanDllPath: '$(REPO_ROOT)/apiScan/Microsoft.SqlServer.Server/dlls'
+            apiScanPdbPath: '$(REPO_ROOT)/apiScan/Microsoft.SqlServer.Server/pdbs'
+            shouldPublishSymbols: ${{ parameters.publishSymbols }}
+            shouldSignPackage: ${{ parameters.isOfficial }}
             signingAppRegistrationClientId: '${{ parameters.signingAppRegistrationClientId }}'
             signingAppRegistrationTenantId: '${{ parameters.signingAppRegistrationTenantId }}'
             signingAuthAkvName: '${{ parameters.signingAuthAkvName }}'
@@ -180,15 +185,11 @@ stages:
             symbolsPublishTokenUri: '${{ parameters.symbolsPublishTokenUri }}'
             symbolsUploadAccount: '${{ parameters.symbolsUploadAccount }}'
 
-            isOfficial: ${{ parameters.isOfficial }}
-            packageName: SqlServer
-            packageFullName: Microsoft.SqlServer.Server
+            dependencies: []
+            fileVersion: '${{ parameters.sqlServerFileVersion }}'
+            packageFullName: 'Microsoft.SqlServer.Server'
+            packageShortName: 'SqlServer'
             packageVersion: '${{ parameters.sqlServerPackageVersion }}'
-            versionProperties: >-
-              -p:SqlServerAssemblyFileVersion=${{ parameters.sqlServerFileVersion }}
-              -p:SqlServerPackageVersion=${{ parameters.sqlServerPackageVersion }}
-            assemblyFileVersion: '${{ parameters.sqlServerFileVersion }}'
-            publishSymbols: ${{ parameters.publishSymbols }}
 
   # ====================================================================
   # Stage 2: Abstractions package (depends on Logging from Stage 1)
