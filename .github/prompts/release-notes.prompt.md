@@ -13,7 +13,7 @@ This repository ships multiple packages. Only generate release notes for package
 ## Package Registry
 
 | Package | Release Notes Directory | How to Identify PRs |
-|---------|------------------------|---------------------|
+| ------- | ----------------------- | ------------------- |
 | `Microsoft.Data.SqlClient` | `release-notes/<Major.Minor>/` | Default — PRs not assigned to another package |
 | `Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider` | `release-notes/add-ons/AzureKeyVaultProvider/<Major.Minor>/` | Labels containing `AKV`, or PR titles/bodies/files referencing `AzureKeyVaultProvider`, `add-ons/`, or `AlwaysEncrypted.AzureKeyVaultProvider` |
 | `Microsoft.SqlServer.Server` | `release-notes/MSqlServerServer/<Major.Minor>/` | PR titles/bodies/files referencing `Microsoft.SqlServer.Server` or `src/Microsoft.SqlServer.Server/` |
@@ -26,7 +26,7 @@ This repository ships multiple packages. Only generate release notes for package
 Each package has its own versioning and dependency sources. Use these to determine package versions and dependency lists:
 
 | Package | Version Source | Dependency Source |
-|---------|---------------|-------------------|
+| ------- | -------------- | ----------------- |
 | `Microsoft.Data.SqlClient` | [tools/props/Versions.props](tools/props/Versions.props) (`MdsVersionDefault`) | [Directory.Packages.props](Directory.Packages.props) and the [project file](src/Microsoft.Data.SqlClient/src/Microsoft.Data.SqlClient.csproj) |
 | `AzureKeyVaultProvider` | [tools/props/Versions.props](tools/props/Versions.props) (`AkvVersionDefault`) | [AKV project file](src/Microsoft.Data.SqlClient/add-ons/AzureKeyVaultProvider/Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider.csproj) and [Directory.Packages.props](Directory.Packages.props) |
 | `Microsoft.SqlServer.Server` | [tools/props/Versions.props](tools/props/Versions.props) (`SqlServerPackageVersion`) | [SqlServer project file](src/Microsoft.SqlServer.Server/Microsoft.SqlServer.Server.csproj) |
@@ -46,7 +46,7 @@ This prompt uses the following skill:
 ### 1. Fetch Milestone Items
 
 - Follow the instructions in the [fetch-milestone-prs](.github/skills/fetch-milestone-prs/SKILL.md) skill to fetch all merged PRs for the milestone "${input:milestone}".
-- The output will be saved to `.milestone-prs/${input:milestone}/` with individual JSON files per PR and an `_index.json` summary.
+- The output will be saved to `.milestone-prs/${input:milestone}/${input:branch}` with individual JSON files per PR and an `_index.json` summary.
 - Identify any milestone items that don't have corresponding commits on the release branch "${input:branch}", and vice versa.
 
 ### 2. Analyze and Categorize
