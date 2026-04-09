@@ -4,8 +4,8 @@
 # file in the project root for more information.
 ################################################################################
 
-# This stage builds the Logging package and publishes the resulting NuGet
-# packages as pipeline artifacts.
+# This stage builds the Logging package via build2.proj and publishes the
+# resulting NuGet packages as pipeline artifacts.
 #
 # The NuGet packages have the following properties:
 #
