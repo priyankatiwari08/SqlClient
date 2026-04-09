@@ -125,6 +125,7 @@ For each package that has relevant PRs in the milestone:
 - Use the contents of the new release notes markdown file to produce markdown suitable for pasting into a GitHub UI Release textbox.
   - GitHub renders newlines within paragraphs and lists as hard breaks, so remove those.
   - Omit the main heading and first sub-heading.
+  - Update any relative links to use absolute URLs pointing to the file in the repository.
   - Provide this new markdown in a code block that can easily be copied and pasted directly into the GitHub UI.
 
 ## Notes
