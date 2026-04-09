@@ -7,6 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 > **Note:** Releases are sorted in reverse chronological order (newest first).
 
+## [Stable Release 6.1.5] - 2026-04-09
+
+This update brings the following changes since the [6.1.4](release-notes/6.1/6.1.4.md) release.
+See the [full release notes](release-notes/6.1/6.1.5.md) for target platform support and dependency information.
+
+### Fixed
+
+- Fixed a connection performance regression where SPN (Service Principal Name) generation was triggered for non-integrated authentication modes (e.g., SQL authentication) on the native SNI path, causing unnecessary DNS lookups and significantly slower connection times.
+  ([#3523](https://github.com/dotnet/SqlClient/issues/3523), [#3946](https://github.com/dotnet/SqlClient/pull/3946))
+
+- Fixed `ExecuteScalar` to properly propagate errors when the server sends data followed by an error token. Previously, errors such as conversion failures during `WHERE` clause evaluation were silently consumed during `SqlDataReader.Close()` instead of being thrown to the caller, which could result in transactions being unexpectedly zombied.
+  ([#3736](https://github.com/dotnet/SqlClient/issues/3736), [#3947](https://github.com/dotnet/SqlClient/pull/3947))
+
+- Fixed `SqlDataReader.GetFieldType` and `SqlDataReader.GetProviderSpecificFieldType` to return the correct type (`SqlVector<float>`) for vector float32 columns.
+  ([#4104](https://github.com/dotnet/SqlClient/issues/4104), [#4151](https://github.com/dotnet/SqlClient/pull/4151))
+
 ## [Stable Release 7.0.0] - 2026-03-17
 
 This section summarizes all changes across the 7.0 preview cycle for users upgrading from the latest 6.1 stable release.

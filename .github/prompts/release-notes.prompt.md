@@ -1,12 +1,12 @@
 ---
 name: release-notes
 description: Generate release notes for a specific milestone, covering all packages in the repository that have changes.
-argument-hint: <milestone>
+argument-hint: <milestone> <branch>
 agent: agent
-tools: ['edit/createFile', 'edit/editFiles', 'read/readFile']
+tools: ['edit/createFile', 'edit/editFiles', 'read/readFile', 'execute/runInTerminal']
 ---
 
-Generate release notes for the milestone "${input:milestone}".
+Generate release notes for the milestone "${input:milestone}" on the branch "${input:branch}".
 
 This repository ships multiple packages. Only generate release notes for packages that have relevant PRs in the milestone. All packages use the same template: [release-notes/template/release-notes-template.md](release-notes/template/release-notes-template.md).
 
@@ -47,6 +47,7 @@ This prompt uses the following skill:
 
 - Follow the instructions in the [fetch-milestone-prs](.github/skills/fetch-milestone-prs/SKILL.md) skill to fetch all merged PRs for the milestone "${input:milestone}".
 - The output will be saved to `.milestone-prs/${input:milestone}/` with individual JSON files per PR and an `_index.json` summary.
+- Identify any milestone items that don't have corresponding commits on the release branch "${input:branch}", and vice versa.
 
 ### 2. Analyze and Categorize
 
@@ -118,6 +119,13 @@ For each package that has relevant PRs in the milestone:
   - Add the new release to the appropriate package section.
   - If a section for the package doesn't yet exist, add one following the existing pattern (see the `AzureKeyVaultProvider` and `Microsoft.SqlServer.Server` sections for reference).
   - If the section already exists, add the new version link to its Release Information list.
+
+### 8. Markdown for GitHub Release
+
+- Use the contents of the new release notes markdown file to produce markdown suitable for pasting into a GitHub UI Release textbox.
+  - GitHub renders newlines within paragraphs and lists as hard breaks, so remove those.
+  - Omit the main heading and first sub-heading.
+  - Provide this new markdown in a code block that can easily be copied and pasted directly into the GitHub UI.
 
 ## Notes
 
