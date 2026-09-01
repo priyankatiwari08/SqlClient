@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
     Microsoft ResX Schema
@@ -13,7 +13,8 @@
     Example:
 
     ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <!-- loc-dedup-test marker 2026-09-01T13:28:24.7737374+05:30 -->
+  <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
@@ -105,6 +106,7 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
+  <!-- loc-dedup-test marker 2026-09-01T13:28:24.7737374+05:30 -->
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -2137,10 +2139,10 @@
     <value>Das vom Server bereitgestellte Zertifikat stimmt nicht mit dem Zertifikat überein, das über die ServerCertificate-Option bereitgestellt wurde.</value>
   </data>
   <data name="SQL_ServerCertificateFileLoadFailed" xml:space="preserve">
-    <value>Die mit der Option „ServerCertificate“ angegebene Zertifikatdatei konnte nicht geladen oder geparst werden: '{0}'.</value>
+    <value>The certificate file specified by the 'ServerCertificate' option could not be loaded or parsed: '{0}'.</value>
   </data>
   <data name="SQL_ServerCertificateNotAvailable" xml:space="preserve">
-    <value>Die Option „ServerCertificate“ wurde angegeben, aber der Server hat kein Zertifikat bereitgestellt, mit dem es verglichen werden kann.</value>
+    <value>The 'ServerCertificate' option was specified, but the server did not present a certificate that could be compared against it.</value>
   </data>
   <data name="SQL_JsonDocumentNotSupportedOnColumnType" xml:space="preserve">
     <value>Ungültiger Versuch, „JsonDocument“ für Spalte „{0}“ abzurufen. „JsonDocument“ wird nur für Spalten vom Typ JSON unterstützt.</value>
